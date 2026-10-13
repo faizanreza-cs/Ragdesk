@@ -1,0 +1,133 @@
+# ragdesk
+
+**An assistant that answers questions from your company's documents, cites its sources,
+and says "I don't know" instead of making things up.**
+
+[![CI](https://github.com/faizanreza-cs/ragdesk/actions/workflows/ci.yml/badge.svg)](https://github.com/faizanreza-cs/ragdesk/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+Point it at a folder of policies, handbooks or product docs (Markdown, HTML, PDF). Employees
+or customers ask questions on your website, in Slack or over the API. Every answer cites the
+section it came from.
+
+![Widget](docs/img/widget.png)
+
+## What makes it production-grade
+
+| | |
+|---|---|
+| **Hybrid retrieval** | BM25 keyword search plus vector search, merged with reciprocal-rank fusion. Exact terms ("401(k)", "P1") and paraphrases both find the right section |
+| **Cited answers** | Every sentence carries a `[n]` citation that maps to a document and section |
+| **Refuses to guess** | Two guardrails: it declines when retrieval finds nothing relevant, and when the model's answer has no valid citation |
+| **Evaluated** | A golden question set measures retrieval hit rate, MRR, answer accuracy, citation precision, and whether it correctly declines unanswerable questions |
+| **Runs offline** | With no API key it answers extractively (verbatim sentences plus citations). Add a key for fluent LLM answers |
+| **Ships anywhere** | REST API, one-line website widget, Slack bot (Socket Mode), CLI, Docker |
+
+## How it works
+
+```mermaid
+flowchart LR
+    D[Docs: md / html / pdf] --> C[Heading-aware chunking]
+    C --> B[BM25 index] & V[Vector index<br/>LSA offline · API embeddings optional]
+    Q[Question] --> B & V
+    B & V --> F[Reciprocal-rank fusion]
+    F --> G1{Relevant enough?}
+    G1 -->|no| X[Decline]
+    G1 -->|yes| L[LLM or extractive answer<br/>numbered sources]
+    L --> G2{Valid citations?}
+    G2 -->|no| X
+    G2 -->|yes| A[Answer + sources]
+```
+
+## Quickstart
+
+```bash
+git clone https://github.com/faizanreza-cs/ragdesk && cd ragdesk
+make setup
+make index                                   # indexes samples/handbook (a fictional company)
+ragdesk ask "What is the hotel cap in London?"
+make api                                     # API + widget demo at http://localhost:8000
+```
+
+Use your own documents and an LLM:
+
+```bash
+export RAGDESK_DOCS=/path/to/your/docs
+export ANTHROPIC_API_KEY=...  RAGDESK_MODEL=<anthropic model id>
+make index && make api
+```
+
+Embed the widget on any page:
+
+```html
+<script src="https://your-ragdesk-host/widget.js"
+        data-api="https://your-ragdesk-host" data-title="Ask HR" defer></script>
+```
+
+Slack: `pip install 'ragdesk[slack]'`, set `SLACK_BOT_TOKEN` and `SLACK_APP_TOKEN`, then run
+`make slack`. Mention the bot in a channel or DM it.
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `RAGDESK_DOCS` | `samples/handbook` | folder to index |
+| `RAGDESK_PROVIDER` | `auto` | `anthropic`, `openai`, `extractive`; `auto` uses the LLM when a key and model are set |
+| `RAGDESK_MODEL` | none | LLM model id |
+| `RAGDESK_EMBEDDINGS` | LSA | `openai` to use API embeddings |
+| `RAGDESK_TOP_K` | `5` | chunks passed to the generator |
+| `RAGDESK_MIN_RELEVANCE` | `0.2` | below this fused score, decline |
+
+## Evaluation
+
+`make eval` runs 24 questions on the sample handbook: 20 answerable, plus 4 that it must
+decline (stock ticker, World Cup, dress code, car lease).
+
+Offline extractive baseline (no LLM):
+
+| Metric | Score |
+|---|---|
+| Retrieval hit@5 | 95% |
+| MRR | 0.95 |
+| Answer accuracy (answerable) | 95% |
+| Citation precision | 95% |
+| Correct declines (unanswerable) | 75% |
+| False declines | 0 |
+
+The misses show where an LLM helps:
+
+- **"When is payday?"** The docs say "paid monthly on the last working day". Keyword and
+  LSA retrieval miss the paraphrase. Fix: API embeddings or query rewriting.
+- **"What is the dress code?"** The extractive answerer latches onto "code of conduct". An
+  LLM generator replies NOT_FOUND here, and the citation guardrail declines.
+
+Run `make eval-llm` to measure the LLM generator on the same set.
+
+## Engineering
+
+- 13 tests: chunking, HTML cleaning, tokenisation, hybrid ranking, citation guardrails
+  (including a generator that cites a non-existent source), refusal, index round-trip,
+  Slack formatting, API, and eval thresholds.
+- ruff, mypy, GitHub Actions, and a Docker image that CI smoke-tests with a real question.
+
+```
+ragdesk/
+  ingest.py     load + heading-aware chunking
+  index.py      BM25 + vectors + reciprocal-rank fusion
+  answer.py     generators (Anthropic, OpenAI, extractive) + guardrails
+  api.py        FastAPI + widget hosting
+  slack_bot.py  Slack Socket Mode bot
+widget/         ragdesk-widget.js (no dependencies, shadow DOM) + demo page
+evals/          questions.yaml + run_eval.py
+```
+
+## Want this on your company's docs?
+
+I set up assistants like this for HR policies, IT help desks, customer support knowledge
+bases and product documentation. That includes connecting Google Drive, Confluence, Notion or
+SharePoint, adding SSO, and tuning on your real questions.
+
+**Faizan Reza**, AI engineer · [GitHub](https://github.com/faizanreza-cs) · faizanreza01@gmail.com
+
+## License
+
+MIT

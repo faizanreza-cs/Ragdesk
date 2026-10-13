@@ -1,0 +1,52 @@
+[project]
+name = "ragdesk"
+version = "0.1.0"
+description = "Company-docs assistant: hybrid retrieval, cited answers that refuse to guess, an eval suite, a website widget and a Slack bot."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Faizan Reza" }]
+dependencies = [
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    "rank-bm25>=0.2.2",
+    "pypdf>=4.0",
+    "beautifulsoup4>=4.12",
+    "pyyaml>=6.0",
+    "pydantic>=2.6",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "anthropic>=0.70",
+]
+
+[project.optional-dependencies]
+slack = ["slack-bolt>=1.18"]
+openai = ["openai>=1.30"]
+dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.5", "mypy>=1.10", "types-PyYAML"]
+
+[project.scripts]
+ragdesk = "ragdesk.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ragdesk"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+check_untyped_defs = true
+files = ["ragdesk"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,73 @@
+# Golden questions for the sample handbook.
+# source: the file that must be retrieved (hit@k, MRR) and cited
+# expect: substrings the answer must contain (case-insensitive); empty for unanswerable
+# answerable: false -> the assistant must decline
+
+- q: How many days of paid time off do full-time employees get each year?
+  source: 01-time-off.md
+  expect: ["20 days"]
+- q: How many unused PTO days can I carry over?
+  source: 01-time-off.md
+  expect: ["5"]
+- q: When do carried-over PTO days expire?
+  source: 01-time-off.md
+  expect: ["March 31"]
+- q: How many paid sick days do we get?
+  source: 01-time-off.md
+  expect: ["10"]
+- q: How long is parental leave for primary caregivers?
+  source: 02-parental-leave.md
+  expect: ["16 weeks"]
+- q: How much leave do secondary caregivers get?
+  source: 02-parental-leave.md
+  expect: ["6 weeks"]
+- q: Within how many days must expense claims be submitted?
+  source: 03-expenses.md
+  expect: ["30 days"]
+- q: What is the hotel cap in London?
+  source: 03-expenses.md
+  expect: ["$350"]
+- q: What is the daily meal allowance when travelling?
+  source: 03-expenses.md
+  expect: ["$75"]
+- q: How much is the home office stipend?
+  source: 03-expenses.md
+  expect: ["$500"]
+- q: Who approves expense claims above $2,000?
+  source: 03-expenses.md
+  expect: ["finance partner"]
+- q: How quickly must I report a lost laptop?
+  source: 04-security.md
+  expect: ["1 hour"]
+- q: Can I paste customer data into AI tools?
+  source: 04-security.md
+  expect: ["Restricted"]
+- q: What are the core hours?
+  source: 05-remote-work.md
+  expect: ["10:00", "15:00"]
+- q: How long can I work from another country?
+  source: 05-remote-work.md
+  expect: ["30 days"]
+- q: What is the 401k match?
+  source: 06-benefits.md
+  expect: ["5%"]
+- q: How big is the annual learning budget?
+  source: 06-benefits.md
+  expect: ["$1,500"]
+- q: What is the response time for P1 IT incidents?
+  source: 07-it-support.md
+  expect: ["30 minutes"]
+- q: How long is the probation period?
+  source: 08-onboarding.md
+  expect: ["90 days"]
+- q: When is payday?
+  source: 08-onboarding.md
+  expect: ["last working day"]
+- q: What is the company stock ticker?
+  answerable: false
+- q: Who won the football World Cup in 2022?
+  answerable: false
+- q: What is the dress code for the office?
+  answerable: false
+- q: Does the company offer a car lease scheme?
+  answerable: false
