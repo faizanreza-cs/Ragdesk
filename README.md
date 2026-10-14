@@ -1,11 +1,22 @@
-# ragdesk
+<div align="center">
 
-**An assistant that answers questions from your company's documents, cites its sources,
-and says "I don't know" instead of making things up.**
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/logo-dark.svg">
+  <img src="docs/img/logo.svg" alt="RAGdesk" height="100">
+</picture>
+
+<p><em>Answers from your company's documents, with a citation for every sentence, and “I don't know” instead of a guess.</em></p>
 
 [![CI](https://github.com/faizanreza-cs/ragdesk/actions/workflows/ci.yml/badge.svg)](https://github.com/faizanreza-cs/ragdesk/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2)](https://www.linkedin.com/in/YOUR-LINKEDIN-ID)
+[![X](https://img.shields.io/badge/X-Follow-000000?logo=x&logoColor=white)](https://x.com/YOUR_X_HANDLE)
+
+</div>
+
+## ⚡ Overview
 
 Point it at a folder of policies, handbooks or product docs (Markdown, HTML, PDF). Employees
 or customers ask questions on your website, in Slack or over the API. Every answer cites the
@@ -13,7 +24,7 @@ section it came from.
 
 ![Widget](docs/img/widget.png)
 
-## What makes it production-grade
+## Features
 
 | | |
 |---|---|
@@ -114,26 +125,6 @@ Run `make eval-llm` to measure the LLM generator on the same set.
   round-trip, messy folders (non-UTF-8 files, same file name in two folders, giant PDF
   paragraphs), Slack escaping, API auth, and eval thresholds.
 - The index is written atomically, so a crash mid-write never leaves a broken index.
-- ruff, mypy, GitHub Actions, and a Docker image that CI smoke-tests with a real question.
-
-```
-ragdesk/
-  ingest.py     load + heading-aware chunking
-  index.py      BM25 + vectors + reciprocal-rank fusion
-  answer.py     generators (Anthropic, OpenAI, extractive) + guardrails
-  api.py        FastAPI + widget hosting
-  slack_bot.py  Slack Socket Mode bot
-  widget/       ragdesk-widget.js (no dependencies, shadow DOM) + demo page
-evals/          questions.yaml + run_eval.py
-```
-
-## Want this on your company's docs?
-
-I set up assistants like this for HR policies, IT help desks, customer support knowledge
-bases and product documentation. That includes connecting Google Drive, Confluence, Notion or
-SharePoint, adding SSO, and tuning on your real questions.
-
-**Faizan Reza**, AI engineer · [GitHub](https://github.com/faizanreza-cs) · faizanreza01@gmail.com
 
 ## License
 
