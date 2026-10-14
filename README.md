@@ -37,19 +37,12 @@ section it came from.
 
 ## How it works
 
-```mermaid
-flowchart LR
-    D[Docs: md / html / pdf] --> C[Heading-aware chunking]
-    C --> B[BM25 index] & V[Vector index<br/>LSA offline · API embeddings optional]
-    Q[Question] --> B & V
-    B & V --> F[Reciprocal-rank fusion]
-    F --> G1{Relevant enough?}
-    G1 -->|no| X[Decline]
-    G1 -->|yes| L[LLM or extractive answer<br/>numbered sources]
-    L --> G2{Valid citations?}
-    G2 -->|no| X
-    G2 -->|yes| A[Answer + sources]
-```
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/pipeline-dark.png">
+  <img src="docs/img/pipeline.png" alt="How ragdesk answers a question" width="469">
+</picture>
+</p>
 
 ## Quickstart
 

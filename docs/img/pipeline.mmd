@@ -1,0 +1,11 @@
+flowchart TB
+    D[Docs: md · html · pdf] --> C[Heading-aware chunking]
+    C --> B[BM25 index] & V[Vector index<br/>LSA offline<br/>API embeddings optional]
+    Q[Question] --> B & V
+    B & V --> F[Reciprocal-rank fusion]
+    F --> G1{{Relevant enough?}}
+    G1 -->|no| X[Decline]
+    G1 -->|yes| L[LLM or extractive answer<br/>numbered sources]
+    L --> G2{{Valid citations?}}
+    G2 -->|no| X
+    G2 -->|yes| A[Answer + sources]
