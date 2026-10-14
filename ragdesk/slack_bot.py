@@ -15,12 +15,19 @@ from ragdesk.answer import Answer
 from ragdesk.service import assistant
 
 
+def _esc(s: str) -> str:
+    """Slack control characters: doc text must not become <!channel> pings or masked links."""
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 def format_answer(ans: Answer) -> str:
     """Slack mrkdwn: the answer, then a compact source list."""
     if ans.declined:
-        return f":mag: {ans.answer}"
-    sources = "\n".join(f"[{c.n}] {Path(c.source).name} › {c.section}" for c in ans.citations)
-    return f"{ans.answer}\n\n*Sources*\n{sources}"
+        return f":mag: {_esc(ans.answer)}"
+    sources = "\n".join(
+        f"[{c.n}] {_esc(Path(c.source).name)} › {_esc(c.section)}" for c in ans.citations
+    )
+    return f"{_esc(ans.answer)}\n\n*Sources*\n{sources}"
 
 
 def main() -> None:  # pragma: no cover - needs Slack credentials

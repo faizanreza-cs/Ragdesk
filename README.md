@@ -65,6 +65,10 @@ Embed the widget on any page:
         data-api="https://your-ragdesk-host" data-title="Ask HR" defer></script>
 ```
 
+For a public embed, set `RAGDESK_CORS_ORIGINS` to your site and put per-IP rate limiting in
+front of `/ask` at your reverse proxy (for example nginx `limit_req`), since each question can
+call a paid LLM.
+
 Slack: `pip install 'ragdesk[slack]'`, set `SLACK_BOT_TOKEN` and `SLACK_APP_TOKEN`, then run
 `make slack`. Mention the bot in a channel or DM it.
 
@@ -75,7 +79,8 @@ Slack: `pip install 'ragdesk[slack]'`, set `SLACK_BOT_TOKEN` and `SLACK_APP_TOKE
 | `RAGDESK_MODEL` | none | LLM model id |
 | `RAGDESK_EMBEDDINGS` | LSA | `openai` to use API embeddings |
 | `RAGDESK_TOP_K` | `5` | chunks passed to the generator |
-| `RAGDESK_MIN_RELEVANCE` | `0.2` | below this fused score, decline |
+| `RAGDESK_CORS_ORIGINS` | `*` | comma-separated sites allowed to call the API (set this for public embeds) |
+| `RAGDESK_ADMIN_TOKEN` | none | enables `POST /reindex`; send it as the `X-Admin-Token` header |
 
 ## Evaluation
 
@@ -104,9 +109,11 @@ Run `make eval-llm` to measure the LLM generator on the same set.
 
 ## Engineering
 
-- 13 tests: chunking, HTML cleaning, tokenisation, hybrid ranking, citation guardrails
-  (including a generator that cites a non-existent source), refusal, index round-trip,
-  Slack formatting, API, and eval thresholds.
+- 16 tests: chunking, HTML cleaning, tokenisation, hybrid ranking, citation guardrails
+  (an answer with any citation to a source it wasn't given is declined), refusal, index
+  round-trip, messy folders (non-UTF-8 files, same file name in two folders, giant PDF
+  paragraphs), Slack escaping, API auth, and eval thresholds.
+- The index is written atomically, so a crash mid-write never leaves a broken index.
 - ruff, mypy, GitHub Actions, and a Docker image that CI smoke-tests with a real question.
 
 ```
@@ -116,7 +123,7 @@ ragdesk/
   answer.py     generators (Anthropic, OpenAI, extractive) + guardrails
   api.py        FastAPI + widget hosting
   slack_bot.py  Slack Socket Mode bot
-widget/         ragdesk-widget.js (no dependencies, shadow DOM) + demo page
+  widget/       ragdesk-widget.js (no dependencies, shadow DOM) + demo page
 evals/          questions.yaml + run_eval.py
 ```
 

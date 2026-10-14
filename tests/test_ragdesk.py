@@ -70,12 +70,23 @@ class Liar:
 
     name = "liar"
 
+    def __init__(self, text: str = "Everyone gets 99 days off [7].") -> None:
+        self.text = text
+
     def generate(self, question, hits):
-        return "Everyone gets 99 days off [7]."
+        return self.text
 
 
-def test_uncited_or_bad_citations_are_declined(index):
-    ans = Assistant(index, Liar(), Settings(top_k=3)).ask("How many PTO days do we get?")
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Everyone gets 99 days off [7].",
+        "PTO is 20 days [1]. Everyone also gets 99 bonus days off [7].",  # one real, one fake
+        "Everyone gets 99 days off.",
+    ],
+)
+def test_uncited_or_bad_citations_are_declined(index, text):
+    ans = Assistant(index, Liar(text), Settings(top_k=3)).ask("How many PTO days do we get?")
     assert ans.declined
 
 
@@ -100,6 +111,24 @@ def test_index_roundtrip(index, tmp_path):
 def test_slack_format(bot):
     text = format_answer(bot.ask("What are the core hours?"))
     assert "*Sources*" in text and "05-remote-work.md" in text
+    ans = bot.ask("What are the core hours?")
+    ans.answer = "Hi <!channel> see <https://x|here>"
+    assert "<!channel>" not in format_answer(ans) and "&lt;!channel&gt;" in format_answer(ans)
+
+
+def test_ingest_survives_real_folders(tmp_path):
+    (tmp_path / "hr").mkdir()
+    (tmp_path / "it").mkdir()
+    (tmp_path / "hr" / "policy.md").write_text("# HR\n\nLeave rules.")
+    (tmp_path / "it" / "policy.md").write_text("# IT\n\nLaptop rules.")
+    (tmp_path / "old.txt").write_bytes("caf\xe9 menu".encode("latin-1"))  # not UTF-8
+    (tmp_path / "notes.md").mkdir()  # a folder with a document suffix
+    (tmp_path / "big.md").write_text("x. " * 10_000)  # one paragraph, no blank lines
+    chunks = load_corpus(tmp_path)
+    ids = [c.id for c in chunks]
+    assert len(ids) == len(set(ids)) and "hr/policy.md#0" in ids
+    assert all(not c.source.startswith("/") for c in chunks)
+    assert max(len(c.text) for c in chunks) <= 900 + 150 + 1
 
 
 def test_api(tmp_path, monkeypatch):
@@ -116,7 +145,10 @@ def test_api(tmp_path, monkeypatch):
     assert "$75" in r["answer"] and r["citations"]
     assert c.get("/widget.js").status_code == 200
     assert "ragdesk" in c.get("/").text
-    assert c.post("/reindex").json()["chunks"] > 10
+    assert c.post("/reindex").status_code == 403  # disabled without RAGDESK_ADMIN_TOKEN
+    monkeypatch.setenv("RAGDESK_ADMIN_TOKEN", "s3cret")
+    assert c.post("/reindex", headers={"X-Admin-Token": "wrong"}).status_code == 403
+    assert c.post("/reindex", headers={"X-Admin-Token": "s3cret"}).json()["chunks"] > 10
     service.assistant.cache_clear()
 
 

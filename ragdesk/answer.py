@@ -170,7 +170,7 @@ class Assistant:
     def ask(self, question: str) -> Answer:
         t0 = time.perf_counter()
         hits = self.index.search(question, k=self.settings.top_k)
-        relevant = [h for h in hits if h.score >= self.settings.min_relevance]
+        relevant = hits
         # guardrail 1: nothing relevant enough was retrieved -> don't ask the model to guess
         if not relevant or max(h.lexical_overlap for h in relevant) < 0.3:
             return Answer(
@@ -183,8 +183,8 @@ class Assistant:
         text = self.generator.generate(question, relevant)
         cited = sorted({int(n) for n in re.findall(r"\[(\d+)\]", text)})
         valid = [n for n in cited if 1 <= n <= len(relevant)]
-        # guardrail 2: the model said it can't answer, or produced no valid citation
-        declined = text.strip() == "NOT_FOUND" or not valid
+        # guardrail 2: the model said it can't answer, or cited nothing / a source it wasn't given
+        declined = text.strip() == "NOT_FOUND" or not cited or len(valid) != len(cited)
         citations = (
             []
             if declined

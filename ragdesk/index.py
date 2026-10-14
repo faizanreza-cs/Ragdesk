@@ -171,8 +171,10 @@ class Index:
     def save(self, path: str | Path) -> Path:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("wb") as f:
+        tmp = path.with_suffix(".tmp")
+        with tmp.open("wb") as f:
             pickle.dump(self, f)
+        os.replace(tmp, path)  # atomic: a crash mid-write never leaves a broken index
         return path
 
     @staticmethod

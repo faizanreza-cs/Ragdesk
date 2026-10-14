@@ -19,10 +19,6 @@ class Settings:
     index_path: Path = field(default_factory=lambda: Path(_env("RAGDESK_INDEX", "data/index.pkl")))
     docs_path: Path = field(default_factory=lambda: Path(_env("RAGDESK_DOCS", "samples/handbook")))
     top_k: int = field(default_factory=lambda: int(_env("RAGDESK_TOP_K", "5")))
-    # below this fused relevance the assistant declines instead of guessing
-    min_relevance: float = field(
-        default_factory=lambda: float(_env("RAGDESK_MIN_RELEVANCE", "0.2"))
-    )
 
 
 def get_settings() -> Settings:

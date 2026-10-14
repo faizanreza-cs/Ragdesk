@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import os
+import secrets
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel, Field
@@ -13,16 +15,19 @@ from pydantic import BaseModel, Field
 from ragdesk import __version__
 from ragdesk.service import assistant, build_index
 
-WIDGET = Path(__file__).resolve().parents[1] / "widget"
+WIDGET = Path(__file__).parent / "widget"
 
 app = FastAPI(
     title="ragdesk",
     version=__version__,
     description="Answers from your company docs, with citations.",
 )
-# the widget is embedded on other sites; restrict origins in production
+# the widget is embedded on other sites; set RAGDESK_CORS_ORIGINS to restrict which ones
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_methods=["POST", "GET"], allow_headers=["*"]
+    CORSMiddleware,
+    allow_origins=os.environ.get("RAGDESK_CORS_ORIGINS", "*").split(","),
+    allow_methods=["POST", "GET"],
+    allow_headers=["*"],
 )
 
 
@@ -42,7 +47,10 @@ def ask(q: Question) -> dict[str, Any]:
 
 
 @app.post("/reindex")
-def reindex() -> dict[str, Any]:
+def reindex(x_admin_token: str = Header(default="")) -> dict[str, Any]:
+    expected = os.environ.get("RAGDESK_ADMIN_TOKEN", "")
+    if not expected or not secrets.compare_digest(x_admin_token, expected):
+        raise HTTPException(403, "set RAGDESK_ADMIN_TOKEN and send it as X-Admin-Token")
     index = build_index()
     assistant.cache_clear()
     return {"chunks": len(index.chunks)}

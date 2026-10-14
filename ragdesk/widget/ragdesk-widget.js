@@ -31,7 +31,7 @@
     'button.send{border:0;background:none;color:#2a78d6;font-weight:600;padding:0 14px;cursor:pointer}' +
     '</style>' +
     '<button class="btn" aria-label="Open chat">?</button>' +
-    '<div class="panel" role="dialog" aria-label="' + title + '">' +
+    '<div class="panel" role="dialog">' +
     '<div class="head"></div><div class="log" aria-live="polite"></div>' +
     '<form><input placeholder="Ask a question..." aria-label="Question" maxlength="1000">' +
     '<button class="send" type="submit">Send</button></form></div>';
@@ -40,6 +40,7 @@
   var log = root.querySelector(".log"), form = root.querySelector("form");
   var input = root.querySelector("input");
   root.querySelector(".head").textContent = title;
+  panel.setAttribute("aria-label", title);
 
   btn.addEventListener("click", function () {
     panel.classList.toggle("open");
@@ -75,7 +76,7 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: q })
     })
-      .then(function (r) { return r.json(); })
+      .then(function (r) { if (!r.ok) throw r; return r.json(); })
       .then(function (d) { pending.remove(); add("b", d.answer, d.citations); })
       .catch(function () { pending.textContent = "Sorry, something went wrong."; });
   });

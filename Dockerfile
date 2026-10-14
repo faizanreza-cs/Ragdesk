@@ -5,7 +5,6 @@ COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /usr/local/bin/uv
 COPY pyproject.toml README.md LICENSE ./
 COPY ragdesk ./ragdesk
 RUN uv pip install --system --no-cache ".[slack]"
-COPY widget ./widget
 # sample docs; mount your own at /docs
 COPY samples/handbook /docs
 VOLUME /data

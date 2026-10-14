@@ -22,9 +22,9 @@ class Chunk:
 def read_text(path: Path) -> str:
     suffix = path.suffix.lower()
     if suffix in {".md", ".txt"}:
-        return path.read_text(encoding="utf-8")
+        return path.read_text(encoding="utf-8", errors="replace")
     if suffix in {".html", ".htm"}:
-        soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
+        soup = BeautifulSoup(path.read_text(encoding="utf-8", errors="replace"), "html.parser")
         for tag in soup(["script", "style", "nav", "footer"]):
             tag.decompose()
         # keep headings as markdown so sections survive
@@ -33,7 +33,7 @@ def read_text(path: Path) -> str:
                 h.replace_with(f"\n{'#' * level} {h.get_text(strip=True)}\n")
         return soup.get_text("\n")
     if suffix == ".pdf":
-        return "\n".join(p.extract_text() or "" for p in PdfReader(str(path)).pages)
+        return "\n\n".join(p.extract_text() or "" for p in PdfReader(str(path)).pages)
     raise ValueError(f"unsupported file type: {suffix}")
 
 
@@ -57,6 +57,8 @@ def chunk_markdown(text: str, source: str, max_chars: int = 900, overlap: int = 
     chunks: list[Chunk] = []
     for section, body in sections:
         paras = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
+        # hard-split paragraphs longer than a chunk (PDF text often has no blank lines)
+        paras = [p[i : i + max_chars] for p in paras for i in range(0, len(p), max_chars)]
         piece = ""
         for p in paras:
             if piece and len(piece) + len(p) > max_chars:
@@ -67,13 +69,15 @@ def chunk_markdown(text: str, source: str, max_chars: int = 900, overlap: int = 
         if piece:
             chunks.append(Chunk("", source, title, section, piece))
     for i, c in enumerate(chunks):
-        c.id = f"{Path(source).name}#{i}"
+        c.id = f"{source}#{i}"
     return chunks
 
 
 def load_corpus(folder: str | Path) -> list[Chunk]:
+    folder = Path(folder)
     out: list[Chunk] = []
-    for path in sorted(Path(folder).rglob("*")):
-        if path.suffix.lower() in {".md", ".txt", ".html", ".htm", ".pdf"}:
-            out += chunk_markdown(read_text(path), str(path))
+    for path in sorted(folder.rglob("*")):
+        if path.is_file() and path.suffix.lower() in {".md", ".txt", ".html", ".htm", ".pdf"}:
+            # relative path: unique across subfolders, and no server paths in answers
+            out += chunk_markdown(read_text(path), path.relative_to(folder).as_posix())
     return out
