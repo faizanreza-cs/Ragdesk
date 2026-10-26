@@ -3,8 +3,7 @@ PY ?= .venv/bin/python
 .PHONY: setup index test lint eval eval-llm api slack docker
 
 setup:
-	uv venv --allow-existing .venv
-	uv pip install --python $(PY) -e ".[dev]"
+	uv sync --locked --extra dev
 
 index:            ## build the index from RAGDESK_DOCS (default: samples/handbook)
 	$(PY) -m ragdesk.cli index
