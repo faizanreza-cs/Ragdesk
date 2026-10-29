@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAGdesk: answers from your documents, with sources</title>
+<meta name="description" content="RAGdesk answers questions from your company&#x27;s documents with a citation for every sentence, and says it doesn&#x27;t know instead of guessing.">
+<link rel="canonical" href="https://faizanreza-cs.github.io/Ragdesk/">
+<meta name="author" content="Faizan Reza">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RAGdesk">
+<meta property="og:title" content="RAGdesk: answers from your documents, with sources">
+<meta property="og:description" content="RAGdesk answers questions from your company&#x27;s documents with a citation for every sentence, and says it doesn&#x27;t know instead of guessing.">
+<meta property="og:url" content="https://faizanreza-cs.github.io/Ragdesk/">
+<meta property="og:image" content="https://faizanreza-cs.github.io/Ragdesk/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="RAGdesk: Answers with sources. No guesses.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@cs_faizan">
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/touch-icon.png">
+<link rel="preload" href="assets/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/styles.css">
+<style>:root{--a:#5240C8;--a-50:#F1F2FD;--a-100:#E3E5FA;--a-200:#C4C8F3;--a-400:#7A7ADB;--pop-1:#EC4899;--pop-2:#F59E0B;--a-ink:#5240C8}</style>
+<script>(function(h){if(!matchMedia("(prefers-reduced-motion: reduce)").matches&&!location.hash)h.classList.add("loading")})(document.documentElement)</script>
+<script src="assets/app.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "RAGdesk", "description": "RAGdesk answers questions from your company's documents with a citation for every sentence, and says it doesn't know instead of guessing.", "url": "https://faizanreza-cs.github.io/Ragdesk/", "codeRepository": "https://github.com/faizanreza-cs/Ragdesk", "programmingLanguage": "Python", "license": "https://opensource.org/licenses/MIT", "author": {"@type": "Person", "name": "Faizan Reza", "url": "https://github.com/faizanreza-cs", "sameAs": ["https://www.linkedin.com/in/faizanreza", "https://x.com/cs_faizan"]}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="loader" aria-hidden="true">
+  <img src="assets/mark.svg" alt="" width="56" height="56">
+  <div class="loader-num">0</div>
+  <div class="loader-bar"><i></i></div>
+  <p class="label">Getting things ready</p>
+</div>
+
+<header class="nav" id="top">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><img src="assets/logo.svg" alt="RAGdesk, back to top" width="104" height="30"></a>
+    <nav aria-label="Sections"><ul class="nav-links"><li><a href="#overview">Overview</a></li><li><a href="#how">How it works</a></li><li><a href="#features">Features</a></li><li><a href="#results">Results</a></li><li><a href="#use">Use it</a></li><li><a href="#faq">FAQ</a></li></ul></nav>
+    <a class="btn btn-dark" href="https://github.com/faizanreza-cs/Ragdesk">GitHub <svg class="out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/> <path d="M7 17 17 7"/></svg></a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <h1 class="hero-title" id="hero-title"><span class="line">Answers</span> <span class="line">with <span class="outline">sources.</span></span> <span class="line">No guesses.</span></h1>
+      <p class="hero-sub">Answers from your company&#x27;s documents, with a citation for every sentence, and “I don&#x27;t know” instead of a guess.</p>
+      <div class="hero-cta">
+        <a class="btn btn-dark" href="https://github.com/faizanreza-cs/Ragdesk">View on GitHub <svg class="go" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/> <path d="m12 5 7 7-7 7"/></svg></a>
+        <a class="btn btn-ghost" href="#results">See the results</a>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true"><span class="label">Scroll</span><span class="bar"></span></div>
+    <div class="hero-year"><p class="label">2026</p><strong>Cited. Evaluated. Honest.</strong></div>
+  </section>
+
+  <section class="overview" id="overview" aria-label="Overview">
+    <div class="wrap"><p class="lit"><span class="w">Point</span> <span class="w">it</span> <span class="w">at</span> <span class="w">a</span> <span class="w">folder</span> <span class="w">of</span> <span class="w">policies,</span> <span class="w">handbooks</span> <span class="w">or</span> <span class="w">product</span> <span class="w">docs.</span> <span class="w">Employees</span> <span class="w">or</span> <span class="w">customers</span> <span class="w">ask</span> <span class="w">questions</span> <span class="w">on</span> <span class="w">your</span> <span class="w">website,</span> <span class="w">in</span> <span class="w">Slack</span> <span class="w">or</span> <span class="w">over</span> <span class="w">the</span> <span class="w">API.</span> <span class="w">Every</span> <span class="w">answer</span> <span class="w">cites</span> <span class="w">the</span> <span class="w">section</span> <span class="w">it</span> <span class="w">came</span> <span class="w">from,</span> <span class="w">and</span> <span class="w">when</span> <span class="w">the</span> <span class="w">documents</span> <span class="w">don&#x27;t</span> <span class="w">say,</span> <span class="w">it</span> <span class="w">says</span> <span class="w">it</span> <span class="w">doesn&#x27;t</span> <span class="w">know.</span></p></div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="how-title">
+    <div class="wrap"><p class="label how-label">How it works</p></div>
+    <div class="pin">
+      <div class="sticky">
+        <div class="steps-track" tabindex="0" role="group" aria-label="How it works, step by step">
+          <article class="step-intro card">
+            <h2 id="how-title">From documents to cited answers.</h2>
+            <p>Retrieval finds the sections, the answer cites them, and a guardrail checks the citations.</p>
+          </article>
+          <article class="step card">
+            <div class="step-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg></div>
+            <svg class="step-ghost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>
+            <svg class="viz" viewBox="0 0 210 210" aria-hidden="true" focusable="false">
+  <rect x="55" y="26" width="100" height="140" rx="16" class="f-white k-line"/>
+  <rect x="73" y="54" width="64" height="9" rx="4.5" class="f-a200"/>
+  <rect x="73" y="76" width="50" height="9" rx="4.5" class="f-line"/>
+  <rect x="73" y="98" width="58" height="9" rx="4.5" class="f-line"/>
+  <rect x="73" y="120" width="40" height="9" rx="4.5" class="f-line"/>
+  <rect class="scan" x="44" y="42" width="122" height="5" rx="2.5" fill-opacity=".9" style="fill:var(--a)"/>
+  <rect class="float" x="30" y="150" width="12" height="12" rx="3" style="fill:var(--pop-2)"/>
+  <circle class="float b" cx="174" cy="44" r="5" style="fill:var(--pop-1)"/>
+</svg>
+            <p class="label">01</p>
+            <h3>Index</h3>
+            <p>Markdown, HTML and PDF, in sections</p>
+          </article>
+          <article class="step card">
+            <div class="step-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></svg></div>
+            <svg class="step-ghost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></svg>
+            <svg class="viz" viewBox="0 0 210 210" aria-hidden="true" focusable="false">
+  <circle cx="105" cy="105" r="66" class="k-a200"/>
+  <circle cx="105" cy="105" r="50" class="f-a50"/>
+  <g class="orbit"><circle cx="105" cy="39" r="8" class="f-a"/></g>
+  <g class="orbit b"><circle cx="171" cy="105" r="6.5" class="f-p1"/></g>
+  <g class="orbit c"><circle cx="105" cy="171" r="5.5" class="f-p2"/></g>
+  <circle class="pulse f-a" cx="105" cy="105" r="13"/>
+</svg>
+            <p class="label">02</p>
+            <h3>Retrieve</h3>
+            <p>Keyword and vector search, fused</p>
+          </article>
+          <article class="step card">
+            <div class="step-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/> <path d="M8 12a2 2 0 0 0 2-2V8H8"/> <path d="M14 12a2 2 0 0 0 2-2V8h-2"/></svg></div>
+            <svg class="step-ghost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/> <path d="M8 12a2 2 0 0 0 2-2V8H8"/> <path d="M14 12a2 2 0 0 0 2-2V8h-2"/></svg>
+            <svg class="viz" viewBox="0 0 210 210" aria-hidden="true" focusable="false">
+  <rect x="34" y="58" width="104" height="70" rx="14" class="f-white k-line"/>
+  <rect x="50" y="76" width="58" height="9" rx="4.5" class="f-a200"/>
+  <rect x="50" y="96" width="42" height="9" rx="4.5" class="f-line"/>
+  <circle class="ripple" cx="126" cy="112" r="20"/>
+  <g class="bob"><path d="M126 112 L126 172 L141 157 L153 182 L165 176 L153 151 L174 151 Z" class="f-a"/></g>
+  <rect class="float f-p2" x="160" y="44" width="11" height="11" rx="3"/>
+</svg>
+            <p class="label">03</p>
+            <h3>Answer</h3>
+            <p>Every sentence with a citation</p>
+          </article>
+          <article class="step card">
+            <div class="step-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="m9 12 2 2 4-4"/></svg></div>
+            <svg class="step-ghost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="m9 12 2 2 4-4"/></svg>
+            <svg class="viz" viewBox="0 0 210 210" aria-hidden="true" focusable="false">
+  <circle class="pulse f-a50" cx="105" cy="105" r="70"/>
+  <circle cx="105" cy="105" r="48" class="f-a"/>
+  <path class="tick" d="M84 106 L99 121 L127 91"/>
+  <rect class="float f-p2" x="166" y="40" width="12" height="12" rx="3"/>
+  <circle class="float b f-p1" cx="40" cy="160" r="6"/>
+</svg>
+            <p class="label">04</p>
+            <h3>Check</h3>
+            <p>No valid citation, no answer</p>
+          </article>
+          <article class="step card">
+            <div class="step-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/> <path d="m21.854 2.147-10.94 10.939"/></svg></div>
+            <svg class="step-ghost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/> <path d="m21.854 2.147-10.94 10.939"/></svg>
+            <svg class="viz" viewBox="0 0 210 210" aria-hidden="true" focusable="false">
+  <g class="twinkle"><path d="M105 30 C110 78 132 100 180 105 C132 110 110 132 105 180 C100 132 78 110 30 105 C78 100 100 78 105 30 Z" class="f-a"/></g>
+  <g class="twinkle" style="animation-delay:-1.5s"><path d="M168 30 C169 42 174 47 186 48 C174 49 169 54 168 66 C167 54 162 49 150 48 C162 47 167 42 168 30 Z" class="f-p1"/></g>
+  <rect class="float f-p2" x="40" y="156" width="12" height="12" rx="3"/>
+</svg>
+            <p class="label">05</p>
+            <h3>Ship</h3>
+            <p>Website, Slack, API or CLI</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features" aria-labelledby="features-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title reveal" id="features-title">Answers you can check.</h2>
+        <p class="reveal" style="--d:.1s">Built so an answer is either sourced or declined.</p>
+      </div>
+      <div class="grid3">
+          <article class="feature card reveal" style="--d:0.00s">
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></svg></div>
+            <h3>Hybrid retrieval</h3>
+            <p>BM25 keyword search plus vector search, merged with reciprocal-rank fusion: exact terms and paraphrases both find the right section.</p>
+            <p class="label">01</p>
+          </article>
+          <article class="feature card reveal" style="--d:0.08s">
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/> <path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/></svg></div>
+            <h3>Cited answers</h3>
+            <p>Every sentence carries a [n] citation that maps to a document and section.</p>
+            <p class="label">02</p>
+          </article>
+          <article class="feature card reveal" style="--d:0.16s">
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>Refuses to guess</h3>
+            <p>It declines when retrieval finds nothing relevant, and when the answer has no valid citation.</p>
+            <p class="label">03</p>
+          </article>
+          <article class="feature card reveal" style="--d:0.00s">
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 17 2 2 4-4"/> <path d="m3 7 2 2 4-4"/> <path d="M13 6h8"/> <path d="M13 12h8"/> <path d="M13 18h8"/></svg></div>
+            <h3>Evaluated</h3>
+            <p>Golden questions measure hit rate, MRR, answer accuracy, citation precision and correct declines.</p>
+            <p class="label">04</p>
+          </article>
+          <article class="feature card reveal" style="--d:0.08s">
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m2 2 20 20"/> <path d="M5.782 5.782A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.307-.193"/> <path d="M21.532 16.5A4.5 4.5 0 0 0 17.5 10h-1.79A7.008 7.008 0 0 0 10 5.07"/></svg></div>
+            <h3>Runs offline</h3>
+            <p>With no API key it answers extractively, with verbatim sentences and citations.</p>
+            <p class="label">05</p>
+          </article>
+          <article class="feature card reveal" style="--d:0.16s">
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/> <path d="m21.854 2.147-10.94 10.939"/></svg></div>
+            <h3>Ships anywhere</h3>
+            <p>A REST API, a one-line website widget, a Slack bot, a CLI and Docker.</p>
+            <p class="label">06</p>
+          </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="results" id="results" aria-labelledby="results-title">
+    <div class="wrap">
+      <div class="panel card">
+        <p class="label">Results</p>
+        <h2 id="results-title">Measured,<br>misses included.</h2>
+        <p class="note">Offline baseline with no LLM: 24 questions on a fictional company handbook, 20 answerable and 4 it must decline.</p>
+        <div class="frame">
+            <div class="metric">
+              <div class="metric-top"><span class="label">01</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></svg></div>
+              <b>95%</b>
+              <p>retrieval hit@5 and answer accuracy on the 20 answerable questions.</p>
+            </div>
+            <div class="metric">
+              <div class="metric-top"><span class="label">02</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/> <path d="m9 12 2 2 4-4"/></svg></div>
+              <b>0</b>
+              <p>false declines: it never refused a question the documents answer.</p>
+            </div>
+            <div class="metric">
+              <div class="metric-top"><span class="label">03</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="m9 12 2 2 4-4"/></svg></div>
+              <b>3 of 4</b>
+              <p>unanswerable questions declined. The miss (dress code) is where an LLM helps.</p>
+            </div>
+        </div>
+        <figure class="chart">
+          <img src="assets/widget.png" alt="The ragdesk widget on a sample intranet page. It answers the London hotel cap and the number of paid sick days, each with its source, and replies that it couldn&#x27;t find the World Cup winner in the company documents." width="1650" height="1140" loading="lazy" decoding="async">
+          <figcaption>The website widget: cited answers, and a refusal when the documents don&#x27;t say.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="band"><div class="wrap band-grid"><div><b>Website</b><span class="label">One-line widget</span></div><div><b>Slack</b><span class="label">Socket Mode bot</span></div><div><b>API</b><span class="label">REST and CLI</span></div></div></div>
+  </section>
+
+  <section class="uses" id="uses" aria-labelledby="uses-title">
+    <input class="sr-only" type="checkbox" id="pause-uses">
+    <div class="wrap uses-head">
+      <div>
+        <h2 class="sec-title reveal" id="uses-title">For questions<br>your docs answer.</h2>
+        <p class="uses-intro reveal" style="--d:.1s">Wherever people ask the same questions your documents already answer.</p>
+      </div>
+      <label class="pause" for="pause-uses"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="14" y="4" width="4" height="16" rx="1"/> <rect x="6" y="4" width="4" height="16" rx="1"/></svg> Pause</label>
+    </div>
+    <div class="marquee">
+      <div class="marquee-track">
+        <div class="set">
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/> <circle cx="9" cy="7" r="4"/> <path d="M22 21v-2a4 4 0 0 0-3-3.87"/> <path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <h3>HR policy questions</h3>
+              <p>Leave, travel and expenses, with the section.</p>
+              <p class="for">For HR teams</p>
+              <p class="label">01</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/> <path d="m4.93 4.93 4.24 4.24"/> <path d="m14.83 9.17 4.24-4.24"/> <path d="m14.83 14.83 4.24 4.24"/> <path d="m9.17 14.83-4.24 4.24"/> <circle cx="12" cy="12" r="4"/></svg>
+              <h3>IT help desk</h3>
+              <p>How-tos from your runbooks.</p>
+              <p class="for">For IT support</p>
+              <p class="label">02</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/> <path d="M12 17h.01"/></svg>
+              <h3>Customer help center</h3>
+              <p>A widget on your docs site.</p>
+              <p class="for">For support teams</p>
+              <p class="label">03</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/> <path d="M22 10v6"/> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+              <h3>Onboarding</h3>
+              <p>New hires ask the handbook in Slack.</p>
+              <p class="for">For people operations</p>
+              <p class="label">04</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/> <rect width="20" height="14" x="2" y="6" rx="2"/></svg>
+              <h3>Sales enablement</h3>
+              <p>Product facts with sources.</p>
+              <p class="for">For sales teams</p>
+              <p class="label">05</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/> <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/> <path d="M7 21h10"/> <path d="M12 3v18"/> <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+              <h3>Policy look-ups</h3>
+              <p>Quoted with sources, never guessed.</p>
+              <p class="for">For risk and compliance</p>
+              <p class="label">06</p>
+            </article>
+        </div>
+        <div class="set dup" aria-hidden="true">
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/> <circle cx="9" cy="7" r="4"/> <path d="M22 21v-2a4 4 0 0 0-3-3.87"/> <path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <h3>HR policy questions</h3>
+              <p>Leave, travel and expenses, with the section.</p>
+              <p class="for">For HR teams</p>
+              <p class="label">01</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/> <path d="m4.93 4.93 4.24 4.24"/> <path d="m14.83 9.17 4.24-4.24"/> <path d="m14.83 14.83 4.24 4.24"/> <path d="m9.17 14.83-4.24 4.24"/> <circle cx="12" cy="12" r="4"/></svg>
+              <h3>IT help desk</h3>
+              <p>How-tos from your runbooks.</p>
+              <p class="for">For IT support</p>
+              <p class="label">02</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/> <path d="M12 17h.01"/></svg>
+              <h3>Customer help center</h3>
+              <p>A widget on your docs site.</p>
+              <p class="for">For support teams</p>
+              <p class="label">03</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/> <path d="M22 10v6"/> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+              <h3>Onboarding</h3>
+              <p>New hires ask the handbook in Slack.</p>
+              <p class="for">For people operations</p>
+              <p class="label">04</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/> <rect width="20" height="14" x="2" y="6" rx="2"/></svg>
+              <h3>Sales enablement</h3>
+              <p>Product facts with sources.</p>
+              <p class="for">For sales teams</p>
+              <p class="label">05</p>
+            </article>
+            <article class="use card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/> <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/> <path d="M7 21h10"/> <path d="M12 3v18"/> <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+              <h3>Policy look-ups</h3>
+              <p>Quoted with sources, never guessed.</p>
+              <p class="for">For risk and compliance</p>
+              <p class="label">06</p>
+            </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="use-it" id="use" aria-labelledby="use-title">
+    <div class="wrap">
+      <h2 class="center-title reveal" id="use-title">Run it, or have it built.</h2>
+      <div class="plans">
+        <article class="plan reveal">
+          <div class="plan-head"><h3>Run it yourself</h3><span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="16 18 22 12 16 6"/> <polyline points="8 6 2 12 8 18"/></svg> Open source</span></div>
+          <p class="plan-text">Free under the MIT license. Runs offline; add an Anthropic key and model id for fluent answers.</p>
+          <ol class="cmds">
+            <li>
+              <div class="cmd-head"><p class="cmd-label">Clone</p><button class="copy" type="button" hidden>Copy</button></div>
+              <div class="cmd"><pre><code>git clone https://github.com/faizanreza-cs/ragdesk &amp;&amp; cd ragdesk</code></pre></div>
+            </li>
+            <li>
+              <div class="cmd-head"><p class="cmd-label">Install, then index the samples</p><button class="copy" type="button" hidden>Copy</button></div>
+              <div class="cmd"><pre><code>make setup
+make index</code></pre></div>
+            </li>
+            <li>
+              <div class="cmd-head"><p class="cmd-label">Ask</p><button class="copy" type="button" hidden>Copy</button></div>
+              <div class="cmd"><pre><code>ragdesk ask &quot;What is the hotel cap in London?&quot;</code></pre></div>
+            </li>
+          </ol>
+          <div class="plan-foot"><a class="btn btn-accent btn-block" href="https://github.com/faizanreza-cs/Ragdesk">View on GitHub <svg class="go" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/> <path d="m12 5 7 7-7 7"/></svg></a></div>
+        </article>
+        <article class="plan featured reveal" style="--d:.1s">
+          <div class="plan-head"><h3>Work with me</h3><span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/> <rect width="20" height="14" x="2" y="6" rx="2"/></svg> For teams</span></div>
+          <p class="plan-text">I build document assistants and AI agents like this one for teams with too many questions.</p>
+          <ul class="checks"><li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg><span>RAGdesk on your documents, website or Slack</span></li><li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg><span>Retrieval tuned and measured on your questions</span></li><li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg><span>Guardrails that decline instead of guessing</span></li><li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg><span>Evals your team can rerun</span></li></ul>
+          <p class="callout"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m11 17 2 2a1 1 0 1 0 3-3"/> <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/> <path d="m21 3 1 11h-2"/> <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/> <path d="M3 4h8"/></svg> Open to freelance projects and full-time roles.</p>
+          <div class="plan-foot">
+            <a class="btn btn-dark btn-block" href="mailto:faizanreza01@gmail.com?subject=RAGdesk">Email me <svg class="go" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/> <path d="m12 5 7 7-7 7"/></svg></a>
+            <div class="socials">
+              <a class="btn btn-ghost" href="https://www.linkedin.com/in/faizanreza"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/> <rect width="4" height="12" x="2" y="9"/> <circle cx="4" cy="4" r="2"/></svg> LinkedIn</a>
+              <a class="btn btn-ghost" href="https://x.com/cs_faizan"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg> <span class="sr-only">Follow on</span> X</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <h2 class="center-title reveal" id="faq-title">A few questions</h2>
+      <div class="faq-list">
+        <details class="card reveal" open>
+          <summary>Does it work without an LLM?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="answer"><p>Yes. With no API key it answers extractively, with verbatim sentences and citations. Add an Anthropic or OpenAI key for fluent answers.</p></div>
+        </details>
+        <details class="card reveal">
+          <summary>How does it avoid making things up?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="answer"><p>Two guardrails: it declines when retrieval finds nothing relevant, and when the answer has no valid citation. An answer citing a source it wasn&#x27;t given is declined.</p></div>
+        </details>
+        <details class="card reveal">
+          <summary>Can it go on our website?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="answer"><p>Yes, with one script tag. For a public embed, set the allowed origins and rate-limit <code>/ask</code> at your proxy, since each question can call a paid LLM.</p></div>
+        </details>
+        <details class="card reveal">
+          <summary>What about paraphrased questions?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="answer"><p>Keyword search finds exact terms like 401(k); vector search finds paraphrases. Where the offline baseline misses one (&quot;When is payday?&quot;), API embeddings or query rewriting fix it.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" aria-labelledby="cta-title">
+    <div class="wrap">
+      <div class="cta-panel reveal">
+        <h2 id="cta-title">Want answers from your own documents?</h2>
+        <p>I can set RAGdesk up on your docs and measure it on the questions your team gets.</p>
+        <div class="cta-actions">
+          <a class="btn btn-white" href="mailto:faizanreza01@gmail.com?subject=RAGdesk">Email me <svg class="go" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/> <path d="m12 5 7 7-7 7"/></svg></a>
+          <a class="btn btn-line" href="https://github.com/faizanreza-cs/Ragdesk">View on GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo.svg" alt="RAGdesk" width="111" height="32" loading="lazy">
+        <p>Answers from your company&#x27;s documents, with a citation for every sentence, and “I don&#x27;t know” instead of a guess.</p>
+      </div>
+      <div>
+        <h2 class="label">Project</h2>
+        <ul>
+          <li><a href="https://github.com/faizanreza-cs/Ragdesk">Source on GitHub</a></li>
+          <li><a href="https://github.com/faizanreza-cs/Ragdesk#readme">README</a></li>
+          <li><a href="https://github.com/faizanreza-cs/Ragdesk/blob/main/LICENSE">License (MIT)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="label">More projects</h2>
+        <ul><li><a href="https://faizanreza-cs.github.io/PDLwatch/">PDLwatch</a></li><li><a href="https://faizanreza-cs.github.io/PharmaPulse/">PharmaPulse</a></li><li><a href="https://faizanreza-cs.github.io/Shelfsense/">ShelfSense</a></li><li><a href="https://faizanreza-cs.github.io/Retail-Media-Lab/">Retail Media Lab</a></li><li><a href="https://faizanreza-cs.github.io/agentkit-enterprise/">AgentKit Enterprise</a></li><li><a href="https://faizanreza-cs.github.io/Docflow-agent/">DocFlow Agent</a></li><li><a href="https://faizanreza-cs.github.io/Pharma-MCP/">Pharma MCP</a></li></ul>
+      </div>
+      <div>
+        <h2 class="label">Contact</h2>
+        <ul>
+          <li><a href="mailto:faizanreza01@gmail.com">Email</a></li>
+          <li><a href="https://www.linkedin.com/in/faizanreza">LinkedIn</a></li>
+          <li><a href="https://x.com/cs_faizan">X</a></li>
+          <li><a href="https://github.com/faizanreza-cs">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <p>© 2026 Faizan Reza</p>
+      <p>Icons: <a href="https://lucide.dev">Lucide</a>. Font: Outfit. <a href="assets/LICENSES.txt">Licenses</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
